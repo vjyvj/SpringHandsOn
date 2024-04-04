@@ -2,46 +2,51 @@ package com.springboot.handson.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.springboot.handson.exception.UserNotFoundException;
+import com.springboot.handson.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.springboot.handson.dao.UserDao;
 import com.springboot.handson.entity.User;
 
 @Service
+@AllArgsConstructor
 public class UserService {
+
+	private  UserRepository userRepository;
 	
-	@Autowired
-	private UserDao userDao;
-	
-	public void addUser(User user) {
-		userDao.save(user);
+	public User addUser(User user) {
+		return userRepository.save(user);
 	}
 	
 	public User getUserById(@PathVariable Integer userId) {
-		System.out.println("@@@@@@ 25");
-		return userDao.findById(userId).get();
-		
+		try {
+			return userRepository.findById(userId).get();
+		} catch (NoSuchElementException ex) {
+			throw new UserNotFoundException("The requested user not found in our records !!", ex);
+		}
 	}
 	
-	public List<User> getAllUser() {
-		System.out.println("@@@@@@@@");
+	public Optional<List<User>> getAllUser() throws Exception {
+
+		//throw new Exception("Test exception");
+
 		List<User> allUsers = new ArrayList<User>();
-		userDao.findAll().forEach(allUsers::add);
-		System.out.println("@@@@@@@@-->"+allUsers.size());
-		return allUsers;
-		
+		userRepository.findAll().forEach(allUsers::add);
+		return Optional.of(allUsers);
+		//return null;
 	}
 	
 	public void deleteUser(Integer id) {
-		userDao.deleteById(id);
+		userRepository.deleteById(id);
 	}
 
 	public User getUserByName(String name) {
-		return userDao.findByName(name);
+		return userRepository.findByName(name);
 	}
 
 }
