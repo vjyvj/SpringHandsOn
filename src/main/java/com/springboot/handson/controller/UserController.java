@@ -47,4 +47,9 @@ public class UserController {
 	public User getUserByName(@PathVariable String name) {
 		return userService.getUserByName(name);
 	}
+
+//	@GetMapping("/testCompletableFuture")
+//	public String getCovidData() {
+//		return userService.getCovidData();
+//	}
 }

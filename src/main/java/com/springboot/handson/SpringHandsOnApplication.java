@@ -10,5 +10,9 @@ public class SpringHandsOnApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringHandsOnApplication.class, args);
+		/**
+		 * Total processor count available for thread processing
+		 */
+		System.out.println(Runtime.getRuntime().availableProcessors());
 	}
 }
